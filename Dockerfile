@@ -1,7 +1,16 @@
-FROM python:3.8.10-slim
+FROM python:3.9-slim
 
 WORKDIR /app
 
-COPY . /app
 
-RUN pip install -r requirements.txt
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY main.py .
+
+EXPOSE 8000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+HEALTHCHECK CMD curl --fail http://localhost:8000 || exit 1
